@@ -3,8 +3,16 @@ MAINTAINER Severalnines <ashraf@severalnines.com>
 
 RUN echo -e "[mariadb]\nname = MariaDB\nbaseurl = http://yum.mariadb.org/10.1/centos7-amd64\nenabled = 1\ngpgkey = https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\ngpgcheck = 1"  > /etc/yum.repos.d/MariaDB.repo
 
+# centos 8 
+#RUN cd /etc/yum.repos.d/
+#RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+#RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+RUN yum update -y
+
+# use mirror to get percona-release-0.1-4.noarch.rpm
 RUN rpmkeys --import https://www.percona.com/downloads/RPM-GPG-KEY-percona && \
-	yum install -y http://www.percona.com/downloads/percona-release/redhat/0.1-4/percona-release-0.1-4.noarch.rpm
+	yum install -y https://mirrors.tuna.tsinghua.edu.cn/percona/centos/7/RPMS/noarch/percona-release-0.1-4.noarch.rpm
+#	yum install -y http://www.percona.com/downloads/percona-release/redhat/0.1-4/percona-release-0.1-4.noarch.rpm
 RUN yum install -y which MariaDB-server MariaDB-client socat percona-xtrabackup && \
 	yum clean all 
 
